@@ -3,7 +3,7 @@
 #include <util/delay.h>
 
 // === UART Initialization ===
-void uart_init(unsigned int baud) {
+void uart_init(unsigned long baud) {
     unsigned int ubrr = F_CPU/16/baud - 1;  
     UBRR0H = (unsigned char)(ubrr >> 8);
     UBRR0L = (unsigned char)ubrr;
@@ -26,7 +26,7 @@ void uart_send_string(const char *str) {
 }
 
 int main(void) {
-    uart_init(115200);// Init UART with 9600 baud
+    uart_init(9600);// Init UART with 9600 baud
 
     while (1) {
         uart_send_string("Hello, World!\r\n");
