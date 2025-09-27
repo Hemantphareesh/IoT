@@ -1,59 +1,59 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
-#define LED_PIN     PB5
-#define ENC_A_PIN   PD2
-#define ENC_B_PIN   PD3
+#define LED_PIN PD6
+#define ENC_A_PIN PD2
+#define ENC_B_PIN PD3
 
 void gpio_init(void) {
-    // LED output
-    DDRB |= (1 << LED_PIN);
-
-    // Encoder A/B inputs
-    DDRD &= ~((1 << ENC_A_PIN) | (1 << ENC_B_PIN));
-    PORTD |= (1 << ENC_A_PIN) | (1 << ENC_B_PIN); // enable pull-ups
+    DDRD |= (1 << LED_PIN);                 // LED output
+    DDRD &= ~((1 << ENC_A_PIN) | (1 << ENC_B_PIN)); // Encoder inputs
+    PORTD |= (1 << ENC_A_PIN) | (1 << ENC_B_PIN);   // Enable pull-ups
 }
 
-uint8_t read_encoder_A() {
-    return (PIND & (1 << ENC_A_PIN)) ? 1 : 0;
-}
-
-uint8_t read_encoder_B() {
-    return (PIND & (1 << ENC_B_PIN)) ? 1 : 0;
+// Read combined A+B as 2-bit number
+uint8_t read_encoder() {
+    return ((PIND & (1 << ENC_A_PIN)) ? 1 : 0) |
+           ((PIND & (1 << ENC_B_PIN)) ? 2 : 0);
 }
 
 int main(void) {
     gpio_init();
 
-    uint8_t last_A = read_encoder_A();
-    int step_count = 0;
+    uint8_t last_state = read_encoder();
+    int8_t step_count = 0;
 
     while (1) {
-        uint8_t A = read_encoder_A();
-        uint8_t B = read_encoder_B();
+        uint8_t curr_state = read_encoder();
 
-        // detect transition A: HIGH -> LOW (falling edge)
-        if (last_A == 1 && A == 0) {
-            if (B == 0) {
-                // Clockwise
-                step_count++;
-            } else {
-                // Counter-clockwise
-                step_count--;
+        if (curr_state != last_state) {
+            // Clockwise sequence
+            if ((last_state == 0 && curr_state == 1) ||
+                (last_state == 1 && curr_state == 3) ||
+                (last_state == 3 && curr_state == 2) ||
+                (last_state == 2 && curr_state == 0)) {
+                step_count++; // Clockwise
+            } 
+            // Counter-clockwise sequence
+            else if ((last_state == 0 && curr_state == 2) ||
+                     (last_state == 2 && curr_state == 3) ||
+                     (last_state == 3 && curr_state == 1) ||
+                     (last_state == 1 && curr_state == 0)) {
+                step_count--; // Counter-clockwise
             }
 
-            // Apply actions
-            if (step_count >= 3) {
-                PORTB |= (1 << LED_PIN);   // LED ON
-                step_count = 0;            // reset count
-            } else if (step_count <= -6) {
-                PORTB &= ~(1 << LED_PIN);  // LED OFF
-                step_count = 0;            // reset count
+            // LED control
+            if (step_count >= 1) {          // 1 CW step → ON
+                PORTD |= (1 << LED_PIN);
+                step_count = 0;
+            } else if (step_count <= -1) {  // 1 CCW step → OFF
+                PORTD &= ~(1 << LED_PIN);
+                step_count = 0;
             }
+
+            last_state = curr_state;
         }
 
-        last_A = A;
-
-        _delay_ms(2); // debounce (adjust as needed)
+        _delay_ms(2); // debounce
     }
 }

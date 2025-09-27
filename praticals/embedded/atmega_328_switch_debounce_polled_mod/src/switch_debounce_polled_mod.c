@@ -3,7 +3,7 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
-#define LED_PIN PB5       // LED connected to PD6 (Arduino pin 6)
+#define LED_PIN PD6       // LED connected to PD6 (Arduino pin 6)
 #define SW_PIN PD2        // Switch connected to PD2
 
 #define DEBOUNCE_DELAY 50 // milliseconds

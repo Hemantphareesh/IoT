@@ -2,12 +2,12 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
-#define LED_PIN PB5       // Built-in LED on Arduino Uno
+#define LED_PIN PD6     
 #define ADC_CHANNEL 0     // A0
 
 int main(void) {
     // Configure LED as output
-    DDRB |= (1 << LED_PIN);
+    DDRD |= (1 << LED_PIN);
 
     // === ADC Setup ===
     ADMUX = (1 << REFS0);                    // AVcc as reference, input channel ADC0
@@ -26,9 +26,9 @@ int main(void) {
 
         // Check if ADC is above 50% (1023 * 0.5 ≈ 512)
         if (adc_value > 512) {
-            PORTB |= (1 << LED_PIN);         // Turn ON LED
+            PORTD |= (1 << LED_PIN);         // Turn ON LED
         } else {
-            PORTB &= ~(1 << LED_PIN);        // Turn OFF LED
+            PORTD &= ~(1 << LED_PIN);        // Turn OFF LED
         }
 
         _delay_ms(50); // Small delay for stability

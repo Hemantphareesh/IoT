@@ -1,23 +1,22 @@
-// rotatory_switch LED 
 #define F_CPU 16000000UL
 #include <avr/io.h>
 #include <util/delay.h>
 
 int main(void) {
     // === LED Setup ===
-    DDRB |= (1 << PB5);   // PB5 (Arduino UNO Pin 13) as output
+    DDRD |= (1 << PD6);    // PD6 (Arduino UNO Pin 6) as output
 
     // === Button Setup ===
-    DDRD &= ~(1 << PD2);  // PD2 as input
-    PORTD |= (1 << PD2);  // Enable pull-up resistor
+    DDRD &= ~(1 << PD2);   // PD2 (Arduino UNO Pin 2) as input
+    PORTD |= (1 << PD2);   // Enable pull-up resistor on PD2
 
     while (1) {
         if (!(PIND & (1 << PD2))) {
-            // Button pressed (active LOW)
-            PORTB |= (1 << PB5);   // LED ON
+            // Switch pressed (active LOW)
+            PORTD |= (1 << PD6);   // LED ON
         } else {
-            // Button released
-            PORTB &= ~(1 << PB5);  // LED OFF
+            // Switch released
+            PORTD &= ~(1 << PD6);  // LED OFF
         }
     }
 }

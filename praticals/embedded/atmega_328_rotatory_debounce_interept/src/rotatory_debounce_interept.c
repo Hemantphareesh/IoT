@@ -2,7 +2,7 @@
 #include <avr/interrupt.h>
 #include <util/delay.h>
 
-#define LED_PIN PB5   // Onboard LED on Arduino Uno
+#define LED_PIN PD6  
 
 volatile int8_t encoder_dir = 0;     // +1 for CW, -1 for CCW
 volatile uint16_t cw_count = 0;      // CW step counter
@@ -57,8 +57,8 @@ ISR(INT1_vect) {
 
 int main(void) {
     // Configure LED pin as output
-    DDRB |= (1 << LED_PIN);
-    PORTB &= ~(1 << LED_PIN); // LED OFF initially
+    DDRD |= (1 << LED_PIN);
+    PORTD &= ~(1 << LED_PIN); // LED OFF initially
 
     // Configure PD2 (INT0) and PD3 (INT1) as input with pullups
     DDRD &= ~((1 << PD2) | (1 << PD3));
@@ -77,11 +77,11 @@ int main(void) {
     while (1) {
         // Check conditions
         if (cw_count >= 3) {
-            PORTB |= (1 << LED_PIN);   // LED ON
+            PORTD |= (1 << LED_PIN);   // LED ON
             cw_count = 0;              // reset CW counter
         }
         if (ccw_count >= 6) {
-            PORTB &= ~(1 << LED_PIN);  // LED OFF
+            PORTD &= ~(1 << LED_PIN);  // LED OFF
             ccw_count = 0;             // reset CCW counter
         }
     }
