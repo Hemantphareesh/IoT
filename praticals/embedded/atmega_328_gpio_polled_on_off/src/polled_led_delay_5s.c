@@ -3,16 +3,16 @@
 #include <util/delay.h>
 
 int main(void) {
-    // Set pin 13 (PB5) as output (PB7 for Simulator)
-    DDRB |= (1 << PB7);
+    // Set pin 6 (PD6) as output ()
+    DDRD |= (1 << PD6);
 
     while (1) {
         // Turn LED ON
-        PORTB |= (1 << PB7);
+        PORTD |= (1 << PD6);
         _delay_ms(5000);  // Wait 5 seconds
 
         // Turn LED OFF
-        PORTB &= ~(1 << PB7);
+        PORTD &= ~(1 << PD6);
         _delay_ms(5000);  // Wait 5 seconds
     }
 }

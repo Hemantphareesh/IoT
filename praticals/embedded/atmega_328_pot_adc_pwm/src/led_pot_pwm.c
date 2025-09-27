@@ -19,7 +19,7 @@ void pwm_init() {
     // Set Fast PWM mode, non-inverting, prescaler = 64
     TCCR0A = (1 << COM0A1) | (1 << WGM01) | (1 << WGM00); // Fast PWM, clear OC0A on compare
     TCCR0B = (1 << CS01) | (1 << CS00); // prescaler = 64
-    DDRD |= (1 << PB5); // Set OC0A (PB5) as output
+    DDRD |= (1 << PD6); // Set OC0A (PD6) as output
 }
 
 int main(void) {

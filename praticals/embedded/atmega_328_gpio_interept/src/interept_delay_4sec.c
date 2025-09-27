@@ -1,7 +1,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
-#define LED_PIN PB7 // Connect LED to PB7
+#define LED_PIN PD6 // Connect LED to PD6
 
 volatile uint8_t toggle_flag = 0;
 
@@ -25,14 +25,14 @@ void timer1_init(void) {
 
 int main(void) {
     // Set LED pin as output
-    DDRB |= (1 << LED_PIN);
+    DDRD |= (1 << LED_PIN);
 
     timer1_init();
     sei(); // Enable global interrupts
 
     while (1) {
         if (toggle_flag) {
-            PORTB ^= (1 << LED_PIN); // Toggle LED
+            PORTD ^= (1 << LED_PIN); // Toggle LED
             toggle_flag = 0;
         }
     }

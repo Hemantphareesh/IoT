@@ -70,11 +70,11 @@ int main(void){
 
     uart_print("EEPROM Test (AT24C32, 0x50)\r\n");
 
-    // // Step 1: Write 0x55 to all 4096 bytes
-    // for(uint16_t addr=0; addr<4096; addr++){
-    //     eeprom_write(addr, 0x55);
-    // }
-    // uart_print("Write complete.\r\n");
+    // Step 1: Write 0x55 to all 4096 bytes
+    for(uint16_t addr=0; addr<4096; addr++){
+        eeprom_write(addr, 0x55);
+    }
+    uart_print("Write complete.\r\n");
 
     // Step 2: Read back and print
     uart_print("Reading EEPROM contents:\r\n");
